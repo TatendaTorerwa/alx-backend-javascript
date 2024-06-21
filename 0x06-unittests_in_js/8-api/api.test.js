@@ -1,25 +1,14 @@
-// api.test.js
-const request = require('supertest');
-const app = require('./api');
+const request = require('request');
 const { expect } = require('chai');
 
-describe('API Tests', () => {
-  describe('Index Page GET /', () => {
-    it('should return status 200', async () => {
-      const response = await request(app).get('/');
-      expect(response.status).to.equal(200);
-    });
+describe('API integration test', () => {
+  const API_URL = 'http://localhost:7865';
 
-    it('should return the message "Welcome to the payment system"', async () => {
-      const response = await request(app).get('/');
-      expect(response.text).to.equal('Welcome to the payment system');
-    });
-
-    it('should not return an incorrect message', async () => {
-      const response = await request(app).get('/');
-      expect(response.text).to.not.equal('Some incorrect message');
+  it('GET / returns correct response', (done) => {
+    request.get(`${API_URL}/`, (_err, res, body) => {
+      expect(res.statusCode).to.be.equal(200);
+      expect(body).to.be.equal('Welcome to the payment system');
+      done();
     });
   });
-
 });
-
